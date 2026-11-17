@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Iowa Select · Lobby TV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Iowa Select Lobby TV — build 2026-11-16c
+   Designed on a fixed 1920x1080 stage, scaled to fit whatever screen it's on.
+   Colours live in the theme blocks below; ?theme=dark|cream|red|night   ?layout=3|grid switches for previews. */
+:root{
+  --red:#D02627; --red-deep:#9E1B1C; --ink:#1F2021; --white:#FFFFFF; --cream:#F7F2EE; --yellow:#F5D90A;
+  /* default theme: "Factory Night" (near-black) */
+  --stage:#1F2021; --text:#FFFFFF; --sub:#F7F2EE; --mute:#A9A6A2;
+  --panel:#2A2B2D; --line:#3E4042; --head-bg:#36383A; --head-text:#FFFFFF;
+  --open-line:#3E4042; --open-text:#6F6C69;
+  --now-bg:#D02627; --now-text:#FFFFFF; --now-sub:#FFE9E9; --now-label:#D02627;
+  --card-bg:#F7F2EE; --card-text:#1F2021; --card-title:#D02627; --card-mute:#6B6764; --card-line:#E2DAD3; --card-accent:#9E1B1C;
+  --slide-bg:#2A2B2D; --slide-text:#FFFFFF; --slide-kick:#F5D90A; --slide-sub:#F7F2EE; --slide-line:#3E4042;
+  --wifi-icon:#F5D90A; --lesson:#F5D90A;
+}
+body.theme-cream{
+  --stage:#F7F2EE; --text:#1F2021; --sub:#4A4744; --mute:#7A7672;
+  --panel:#FFFFFF; --line:#E2DAD3; --head-bg:#1F2021; --head-text:#FFFFFF;
+  --open-line:#D9D0C8; --open-text:#B2AAA3;
+  --now-bg:#D02627; --now-text:#FFFFFF; --now-sub:#FFE9E9; --now-label:#D02627;
+  --card-bg:#FFFFFF; --card-text:#1F2021; --card-title:#D02627; --card-mute:#6B6764; --card-line:#EDE6E0; --card-accent:#9E1B1C;
+  --slide-bg:#1F2021; --slide-text:#FFFFFF; --slide-kick:#F5D90A; --slide-sub:#F7F2EE; --slide-line:#3E4042;
+  --wifi-icon:#D02627; --lesson:#9E1B1C;
+}
+body.theme-red{
+  --stage:#D02627; --text:#FFFFFF; --sub:#FFE3E3; --mute:#FFC9C9;
+  --panel:#B31F20; --line:#E2585A; --head-bg:#1F2021; --head-text:#FFFFFF;
+  --open-line:#E2585A; --open-text:#F0A3A4;
+  --now-bg:#FFFFFF; --now-text:#1F2021; --now-sub:#9E1B1C; --now-label:#FFFFFF;
+  --card-bg:#FFFFFF; --card-text:#1F2021; --card-title:#D02627; --card-mute:#6B6764; --card-line:#EDE6E0; --card-accent:#9E1B1C;
+  --slide-bg:#1F2021; --slide-text:#FFFFFF; --slide-kick:#F5D90A; --slide-sub:#F7F2EE; --slide-line:#3E4042;
+  --wifi-icon:#F5D90A; --lesson:#F5D90A;
+}
+body.theme-night{
+  --stage:#000000; --text:#FFFFFF; --sub:#F5D90A; --mute:#9A9A9A;
+  --panel:#141414; --line:#333333; --head-bg:#F5D90A; --head-text:#000000;
+  --open-line:#2A2A2A; --open-text:#555555;
+  --now-bg:#F5D90A; --now-text:#000000; --now-sub:#3A3300; --now-label:#F5D90A;
+  --card-bg:#141414; --card-text:#FFFFFF; --card-title:#F5D90A; --card-mute:#9A9A9A; --card-line:#2A2A2A; --card-accent:#F5D90A;
+  --slide-bg:#D02627; --slide-text:#FFFFFF; --slide-kick:#FFFFFF; --slide-sub:#FFE9E9; --slide-line:#E2585A;
+  --wifi-icon:#F5D90A; --lesson:#F5D90A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden}
+body{font-family:Montserrat,Arial,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center;
+  background:var(--stage);display:grid;grid-template-rows:118px 1fr 330px 64px;gap:22px;padding:26px 36px 18px}
+.head{font-family:Anton,Impact,sans-serif;letter-spacing:.02em;text-transform:uppercase}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:26px}
+.top img{width:104px;height:104px}
+body.theme-cream .top img{filter:invert(1)}
+.brand .head{font-size:56px;line-height:1}
+.brand .sub{font-size:26px;font-weight:600;color:var(--sub);margin-top:6px}
+.top .spacer{flex:1}
+.wifi{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:12px 24px;display:flex;align-items:center;gap:18px}
+.wifi svg{width:44px;height:44px;fill:none;stroke:var(--wifi-icon);stroke-width:2.2}
+.wifi svg circle{fill:var(--wifi-icon)}
+.wifi .k{font-size:17px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
+.wifi .v{font-size:27px;font-weight:700}
+.clock{text-align:right;min-width:300px}
+.clock .t{font-family:Anton,Impact,sans-serif;font-size:76px;line-height:1}
+.clock .ap{font-size:34px;margin-left:6px}
+
+/* ---------- court grid ---------- */
+.courts{display:grid;grid-template-columns:150px repeat(6,1fr);grid-template-rows:56px repeat(3,1fr);gap:10px}
+.ch{display:flex;align-items:center;justify-content:center;background:var(--head-bg);color:var(--head-text);border-radius:12px;
+  font-family:Anton,Impact,sans-serif;font-size:30px;letter-spacing:.04em;text-transform:uppercase}
+.ch.corner{background:none}
+.rl{display:flex;flex-direction:column;justify-content:center;padding-left:6px}
+.rl .head{font-size:40px;line-height:1}
+.rl .sm{font-size:17px;color:var(--mute);font-weight:600;margin-top:4px}
+.rl.now .head{color:var(--now-label)}
+.cell{border-radius:14px;padding:12px 18px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;min-width:0;
+  background:var(--panel);border:2px solid var(--line)}
+.cell .kd{align-self:flex-start;font-size:15px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:6px;padding:3px 9px;margin-bottom:6px;
+  background:var(--red);color:#fff}
+.cell .kd.program{background:var(--cream);color:var(--ink)}
+.cell .kd.lesson{background:var(--yellow);color:var(--ink)}
+.cell .kd.clinic{background:#fff;color:var(--ink)}
+.cell .kd.event{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px currentColor}
+.cell .lab{font-weight:800;font-size:34px;line-height:1.1}
+.cell .tm{font-size:22px;font-weight:600;color:var(--sub);margin-top:6px}
+.cell .sb{font-size:19px;font-weight:600;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell.open{background:transparent;border:2px dashed var(--open-line);align-items:center}
+.cell.open .lab{font-size:24px;color:var(--open-text);font-weight:700}
+.cell.lesson .lab{color:var(--lesson)}
+.cell.now{background:var(--now-bg);border-color:var(--now-bg);color:var(--now-text)}
+.cell.now .lab{color:var(--now-text)}
+.cell.now .tm,.cell.now .sb{color:var(--now-sub)}
+.cell.now .kd{background:var(--now-text);color:var(--now-bg);box-shadow:none}
+.cell.fit2 .lab{font-size:28px}.cell.fit3 .lab{font-size:23px}.cell.fit4 .lab{font-size:19px}
+.quiet{grid-column:2/8;grid-row:2/5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:2px dashed var(--open-line);border-radius:16px;text-align:center}
+.quiet .head{font-size:64px}
+.quiet p{font-size:28px;color:var(--sub);margin-top:12px;font-weight:600}
+
+/* ---------- bottom cards ---------- */
+.cards{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:22px}
+.cards.noweekend{grid-template-columns:2fr 1.15fr}
+.card{background:var(--card-bg);color:var(--card-text);border-radius:18px;padding:22px 28px;overflow:hidden;display:flex;flex-direction:column;position:relative;border:2px solid var(--card-line)}
+.card .ttl{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
+.card .ttl .head{font-size:38px;line-height:1;color:var(--card-title)}
+.card .ttl .tag{font-size:21px;font-weight:700;color:var(--card-mute)}
+.body{flex:1;min-height:0;position:relative}
+.ann{list-style:none}
+.ann li{font-size:25px;font-weight:600;line-height:1.3;padding:8px 0 8px 30px;position:relative;border-bottom:1.5px solid var(--card-line)}
+.ann li:last-child{border-bottom:0}
+.ann li:before{content:"";position:absolute;left:4px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--card-title)}
+.ann li.pin:before{background:var(--card-text)}
+.empty{font-size:25px;font-weight:600;color:var(--card-mute);line-height:1.35}
+.empty b{color:var(--card-text)}
+.wk .ev{padding:7px 0 9px;border-bottom:1.5px solid var(--card-line)}
+.wk .ev:last-child{border-bottom:0}
+.wk .en{font-size:23px;font-weight:800;line-height:1.2}
+.wk .el{font-size:19px;font-weight:600;color:var(--card-accent);margin-top:2px}
+.wk .et{font-size:20px;font-weight:600;color:var(--card-mute);margin-top:3px;line-height:1.3}
+.pager{position:absolute;right:26px;top:28px;font-size:18px;font-weight:700;color:var(--card-mute)}
+
+/* slide card is the "show" panel */
+.card.slide{background:var(--slide-bg);color:var(--slide-text);border:2px solid var(--slide-line);padding:0}
+.slide .sl{position:absolute;inset:0;padding:22px 28px;display:flex;flex-direction:column;opacity:0;transition:opacity .8s}
+.slide .sl.on{opacity:1}
+.slide .kick{font-size:19px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--slide-kick)}
+.slide .big{font-family:Anton,Impact,sans-serif;font-size:46px;line-height:1.05;text-transform:uppercase;margin-top:8px}
+.slide .txt{font-size:23px;font-weight:600;line-height:1.35;color:var(--slide-sub);margin-top:10px}
+.slide .pts{display:inline-block;margin-top:12px;background:var(--red);color:#fff;border-radius:10px;padding:6px 14px;font-size:21px;font-weight:800}
+body.theme-night .slide .pts{background:#000}
+body.theme-red .cell .kd.practice{background:#fff;color:var(--red)}
+body.theme-red .cell.now .kd.practice{background:var(--ink);color:#fff}
+.slide .img{position:absolute;inset:0;background:#000 center/contain no-repeat}
+.slide .img.cover{background-size:cover}
+.slide .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 24px;background:rgba(20,20,21,.82);font-size:24px;font-weight:700;color:#fff}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;margin-top:10px}
+.board .r{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;padding:5px 0;border-bottom:1.5px solid var(--slide-line);min-width:0}
+.board .n{font-family:Anton,Impact,sans-serif;font-size:26px;color:var(--slide-kick);width:30px}
+.board .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.board .nm small{display:block;font-size:15px;color:var(--slide-sub);opacity:.75;font-weight:600}
+.board .p{color:var(--slide-sub)}
+.dots{position:absolute;right:20px;bottom:14px;display:flex;gap:8px;z-index:2}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--slide-line)}
+.dots i.on{background:var(--slide-kick)}
+
+/* ---------- footer ---------- */
+.foot{display:flex;align-items:center;gap:40px;border-top:2px solid var(--line);padding-top:10px}
+.so{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:700}
+.so svg{width:34px;height:34px;fill:var(--text)}
+.foot .spacer{flex:1}
+.foot .stale{font-size:18px;color:var(--wifi-icon);font-weight:700}
+.foot .web{font-size:25px;font-weight:700;color:var(--sub)}
+
+/* ---------- paused ---------- */
+.paused{grid-row:2/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.paused img{width:300px;height:300px}
+body.theme-cream .paused img{filter:invert(1)}
+.paused .head{font-size:80px}
+
+/* ---------- side layouts: courts down the left, cards on the right (?layout=1|2|3) ---------- */
+body.side #stage{grid-template-rows:118px 1fr 64px;grid-template-columns:var(--left) 1fr;column-gap:26px;
+  grid-template-areas:"top top" "courts cards" "foot foot"}
+body.side .top{grid-area:top} body.side .foot{grid-area:foot}
+body.side .courts{grid-area:courts} body.side .cards{grid-area:cards} body.side .paused{grid-area:courts/courts/cards/cards}
+body.lay-1{--left:930px} body.lay-2{--left:720px} body.lay-3{--left:640px}
+.vc{display:grid;gap:8px;grid-template-rows:46px repeat(6,minmax(0,1fr));min-height:0}
+.vc .ch{font-size:24px;border-radius:10px}
+.vc .cn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--head-bg);color:var(--head-text);border-radius:12px;
+  font-family:Anton,Impact,sans-serif;font-size:21px;text-transform:uppercase;line-height:1;text-align:center}
+.vc .cn b{display:block;font-size:44px;font-weight:400}
+.vc .cell{padding:8px 14px;border-radius:12px}
+.vc .cell .kd{font-size:12px;padding:2px 7px;margin-bottom:3px}
+.vc .cell .lab{font-size:26px}
+.vc .cell .tm{font-size:18px;margin-top:2px}
+.vc .cell .sb{font-size:16px}
+.vc .cell.fit2 .lab{font-size:22px}.vc .cell.fit3 .lab{font-size:19px}.vc .cell.fit4 .lab{font-size:16px}
+.vc .cell.open .lab{font-size:19px}
+.vc .cell .nx{font-size:17px;font-weight:700;margin-top:6px;padding-top:6px;border-top:1.5px solid rgba(0,0,0,.12);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mute)}
+.vc .cell.now .nx{border-top-color:rgba(255,255,255,.35);color:var(--now-sub)}
+.vc .cell .nx b{font-weight:800;color:inherit}
+.vc .quiet{grid-column:2/-1;grid-row:2/8}
+.vc .quiet .head{font-size:48px}.vc .quiet p{font-size:22px}
+body.side .cards{display:grid;gap:22px;min-height:0}
+body.lay-1 .cards{grid-template-columns:1fr;grid-template-rows:1.2fr 1fr 230px}
+body.lay-1 .ann li{font-size:25px;padding:6px 0 6px 30px}
+body.lay-2 .cards{grid-template-columns:1fr 1fr;grid-template-rows:1fr 300px}
+body.lay-2 #slides{grid-column:1/3}
+body.lay-3 .cards{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+body.lay-3 #annCard{grid-row:1/3}
+body.side .ann li{font-size:28px}
+body.side .wk .en{font-size:25px} body.side .wk .et{font-size:21px}
+body.lay-1 .card .ttl .head,body.lay-2 .card .ttl .head,body.lay-3 .card .ttl .head{font-size:42px}
+body.side .cards.noweekend{grid-template-columns:1fr}
+body.side .card{min-height:0}
+body.lay-3 .vc .cell.now{background:var(--panel);border:2px solid var(--line);border-left:12px solid var(--red);color:var(--text)}
+body.lay-3 .vc .cell.now .lab{color:var(--text)}
+body.lay-3 .vc .cell.now .tm{color:var(--red-deep)}
+body.lay-3 .vc .cell.now .kd{background:var(--red);color:#fff}
+body.lay-3 .vc .cell.now .kd.lesson{background:var(--yellow);color:var(--ink)}
+body.lay-3 .vc .cell.now .kd.program{background:var(--ink);color:#fff}
+body.lay-3 .vc .cell.now .nx{border-top-color:var(--line);color:var(--mute)}
+body.lay-3 .vc .cell .nx b{color:var(--text)}
+.vc .tl{display:flex;align-items:center;gap:12px}
+.vc .tl .kd{margin-bottom:0}
+.vc .tl .tm{margin-top:0;font-size:18px}
+body.lay-3 .vc .cell .lab{margin-top:4px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="top">
+    <img src="logo.png" alt="Iowa Select">
+    <div class="brand">
+      <div class="head">Iowa Select Volleyball</div>
+      <div class="sub" id="dateLine">Tonight at the Factory</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="wifi" id="wifi">
+      <svg viewBox="0 0 24 24"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.3a10 10 0 0 1 14 0"/><path d="M8.5 15.8a5 5 0 0 1 7 0"/><circle cx="12" cy="19.3" r="1.2" stroke="none"/></svg>
+      <div><div class="k">Wi-Fi</div><div class="v" id="wifiName">—</div></div>
+      <div><div class="k">Password</div><div class="v" id="wifiPass">—</div></div>
+    </div>
+    <div class="clock"><span class="t" id="clock">--:--</span><span class="ap head" id="ampm"></span></div>
+  </div>
+
+  <div class="courts" id="courts"></div>
+
+  <div class="cards" id="cards">
+    <div class="card" id="annCard">
+      <div class="ttl"><span class="head">Announcements</span></div>
+      <div class="body"><ul class="ann" id="ann"></ul></div>
+    </div>
+    <div class="card" id="wkCard">
+      <div class="ttl"><span class="head">This weekend</span><span class="tag" id="wkLabel"></span></div>
+      <div class="pager" id="wkPager"></div>
+      <div class="body wk" id="wk"></div>
+    </div>
+    <div class="card slide" id="slides"></div>
+  </div>
+
+  <div class="paused hide" id="paused">
+    <img src="logo.png" alt="">
+    <div class="head">Welcome to the Factory</div>
+  </div>
+
+  <div class="foot">
+    <div class="so" id="soFb"><svg viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span></span></div>
+    <div class="so" id="soIg"><svg viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span></span></div>
+    <div class="so" id="soTt"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span></span></div>
+    <div class="spacer"></div>
+    <div class="stale" id="stale"></div>
+    <div class="web" id="web"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════ settings ═══════════════ */
+// The Apps Script web app URL (ends in /exec). Paste it once, here.
+var FEED_URL = 'PASTE_FEED_URL_HERE';
+var CHECK_EVERY_MS = 120000;        // ask for fresh data every 2 minutes
+var TZ = 'America/Chicago';         // facility time, whatever the TV is set to
+var COURTS = [0, 1, 2, 3, 4, 5];
+
+// Testing only:  ?feed=sample.json   ?at=18:40 (pretend clock)   ?day=Friday, Nov 20   ?theme=dark|cream|red|night   ?layout=3|grid
+var Q = new URLSearchParams(location.search);
+if (Q.get('feed')) FEED_URL = Q.get('feed');
+var AT = Q.get('at');
+// Defaults: cream colorway, slim-list layout (courts down the left). The Settings tab can change both.
+var LAYOUT = '';
+function applyLayout(l) {
+  LAYOUT = (l === 'grid' || l === '0') ? '' : (l || '3');
+  document.body.classList.remove('side', 'lay-1', 'lay-2', 'lay-3');
+  if (LAYOUT) document.body.classList.add('side', 'lay-' + LAYOUT);
+  el('courts').className = 'courts';
+  el('courts').style.gridTemplateColumns = '';
+}
+function applyTheme(th) {
+  document.body.className = document.body.className.replace(/\btheme-\w+/g, '').trim();
+  if (th && th !== 'dark') document.body.classList.add('theme-' + th);
+}
+applyTheme(Q.get('theme') || 'cream');
+applyLayout(Q.get('layout') || '3');
+
+var KIND_TAG = { practice: 'Practice', program: 'Program', lesson: 'Private lesson', clinic: 'Clinic', event: 'Event' };
+var feed = null, slideIdx = 0, slideTimer = null, wkPage = 0, wkPages = [], lastSlideKey = '';
+
+/* ═══════════════ fit the 1920x1080 stage to the screen ═══════════════ */
+function fit() {
+  var s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById('stage').style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+}
+addEventListener('resize', fit); fit();
+
+/* ═══════════════ time (always Central) ═══════════════ */
+function nowParts() {
+  var d = new Date();
+  var p = {};
+  new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'long', month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', hourCycle: 'h23', year: 'numeric' })
+    .formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+  var mins = Number(p.hour) * 60 + Number(p.minute);
+  if (AT) { var a = AT.split(':'); mins = Number(a[0]) * 60 + Number(a[1] || 0); }
+  return { mins: mins, weekday: p.weekday, month: p.month, day: p.day };
+}
+function hm(m, withAp) {
+  var h = Math.floor(m / 60) % 24, mm = m % 60, h12 = (h + 11) % 12 + 1;
+  return h12 + (mm ? ':' + ('0' + mm).slice(-2) : '') + (withAp ? (h < 12 ? 'am' : 'pm') : '');
+}
+function span(a, b) {
+  var same = (a < 720) === (b < 720);
+  return hm(a, !same) + '–' + hm(b, true);
+}
+
+function tickClock() {
+  var t = nowParts(), h = Math.floor(t.mins / 60), m = t.mins % 60;
+  document.getElementById('clock').textContent = ((h + 11) % 12 + 1) + ':' + ('0' + m).slice(-2);
+  document.getElementById('ampm').textContent = h < 12 ? 'am' : 'pm';
+  var when = t.mins < 15 * 60 ? 'Today' : 'Tonight';
+  document.getElementById('dateLine').textContent = when + ' at the Factory · ' + (Q.get('day') || (t.weekday + ', ' + t.month + ' ' + t.day));
+}
+
+/* ═══════════════ helpers ═══════════════ */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+function el(id) { return document.getElementById(id); }
+
+/** "13B · 13M · 13R · 13W · 14M" -> "All 13s · 14M" */
+function teamLabel(label) {
+  var codes = label.split(/\s*·\s*/);
+  if (!codes.every(function (c) { return /^\d{2}[A-Z]{1,2}$/.test(c); })) return label;
+  var byAge = {}, ages = [];
+  codes.forEach(function (c) {
+    var a = c.slice(0, 2);
+    if (!byAge[a]) { byAge[a] = []; ages.push(a); }
+    byAge[a].push(c.slice(2));
+  });
+  return ages.map(function (a) {
+    var s = byAge[a];
+    if (['M', 'B', 'R', 'W'].every(function (x) { return s.indexOf(x) !== -1; })) return 'All ' + a + 's';
+    var ord = ['M', 'B', 'R', 'W'];
+    s.sort(function (x, y) { return ord.indexOf(x) - ord.indexOf(y); });
+    return s.map(function (x) { return a + x; }).join(' · ');
+  }).join(' · ');
+}
+
+/* ═══════════════ court grid: now / next / later ═══════════════ */
+function renderCourts() {
+  if (LAYOUT) return renderCourtsVertical();
+  var box = el('courts');
+  var t = nowParts().mins;
+  var items = (feed && feed.courts && feed.courts.items) || [];
+
+  var per = {};
+  COURTS.forEach(function (c) { per[c] = []; });
+  items.forEach(function (it) { it.courts.forEach(function (c) { if (per[c]) per[c].push(it); }); });
+
+  var rows = [[], [], []];   // now, next, later — one item (or null) per court
+  COURTS.forEach(function (c) {
+    var list = per[c].filter(function (it) { return it.end > t; }).sort(function (a, b) { return a.start - b.start; });
+    var cur = list[0] && list[0].start <= t ? list[0] : null;
+    var rest = cur ? list.slice(1) : list;
+    rows[0].push(cur);
+    rows[1].push(rest[0] || null);
+    rows[2].push(rest[1] || null);
+  });
+
+  var html = '<div class="ch corner"></div>';
+  COURTS.forEach(function (c) { html += '<div class="ch">Court ' + c + '</div>'; });
+
+  var anything = rows.some(function (r) { return r.some(function (x) { return x; }); });
+  var labels = [['Now', 'on court'], ['Next', 'coming up'], ['Later', 'tonight']];
+
+  if (!anything) {
+    html += '<div class="rl now" style="grid-row:2/5"></div>';
+    html += '<div class="quiet"><div class="head">The courts are quiet</div><p>' +
+            (items.length ? 'That’s a wrap for today. ' : '') + 'Full schedule: schedule.iowaselectvbc.com</p></div>';
+    box.innerHTML = html;
+    return;
+  }
+
+  rows.forEach(function (row, ri) {
+    html += '<div class="rl' + (ri === 0 ? ' now' : '') + '" style="grid-row:' + (ri + 2) + '"><div class="head">' +
+            labels[ri][0] + '</div><div class="sm">' + labels[ri][1] + '</div></div>';
+    var i = 0;
+    while (i < COURTS.length) {
+      var it = row[i], j = i + 1;
+      while (j < COURTS.length && it && row[j] && row[j].id === it.id) j++;
+      var col = 'grid-row:' + (ri + 2) + ';grid-column:' + (i + 2) + '/' + (j + 2);
+      if (!it) {
+        html += '<div class="cell open" style="' + col + '"><div class="lab">Open</div></div>';
+      } else {
+        var lab = it.kind === 'practice' ? teamLabel(it.label) : it.label, sub = it.sub;
+        if (it.kind === 'lesson' && it.sub) { lab = it.sub; sub = ''; }       // lesson: coach name is the headline
+        var width = j - i, len = lab.length / width;
+        var fit = len > 34 ? ' fit4' : len > 22 ? ' fit3' : len > 13 ? ' fit2' : '';
+        html += '<div class="cell ' + it.kind + (ri === 0 ? ' now' : '') + fit + '" style="' + col + '">' +
+                '<div class="kd ' + it.kind + '">' + (KIND_TAG[it.kind] || 'Event') + '</div>' +
+                '<div class="lab">' + esc(lab) + '</div>' +
+                '<div class="tm">' + span(it.start, it.end) + '</div>' +
+                (sub ? '<div class="sb">' + esc(sub) + '</div>' : '') + '</div>';
+      }
+      i = j;
+    }
+  });
+  box.innerHTML = html;
+}
+
+
+/* ═══════════════ side layouts: one row per court ═══════════════ */
+function cellHtml(it, isNow, extra, style, cols) {
+  var lab = it.kind === 'practice' ? teamLabel(it.label) : it.label, sub = it.sub;
+  if (it.kind === 'lesson' && it.sub) { lab = it.sub; sub = ''; }
+  var len = lab.length * (4 / cols);
+  var fit = len > 70 ? ' fit4' : len > 46 ? ' fit3' : len > 28 ? ' fit2' : '';
+  var tag = '<div class="kd ' + it.kind + '">' + (KIND_TAG[it.kind] || 'Event') + '</div>';
+  var top = LAYOUT === '3'                                  // compact: tag and time share a line
+    ? '<div class="tl">' + tag + '<span class="tm">' + span(it.start, it.end) + '</span></div><div class="lab">' + esc(lab) + '</div>'
+    : tag + '<div class="lab">' + esc(lab) + '</div><div class="tm">' + span(it.start, it.end) + '</div>';
+  return '<div class="cell ' + it.kind + (isNow ? ' now' : '') + fit + '" style="' + style + '">' + top +
+    (sub ? '<div class="sb">' + esc(sub) + '</div>' : '') + (extra || '') + '</div>';
+}
+function shortName(it) {
+  var lab = it.kind === 'practice' ? teamLabel(it.label) : (it.kind === 'lesson' && it.sub ? 'Lesson · ' + it.sub : it.label);
+  return lab;
+}
+function renderCourtsVertical() {
+  var box = el('courts');
+  box.classList.add('vc');                    // keep 'hide' when the screen is paused
+  var t = nowParts().mins;
+  var items = (feed && feed.courts && feed.courts.items) || [];
+  var per = {};
+  COURTS.forEach(function (c) { per[c] = []; });
+  items.forEach(function (it) { it.courts.forEach(function (c) { if (per[c]) per[c].push(it); }); });
+
+  var heads = LAYOUT === '1' ? [['Now', 'now'], ['Next', ''], ['Later', '']]
+            : LAYOUT === '2' ? [['Now', 'now'], ['Next', '']]
+            : [['Now · Next', 'now']];
+  var cols = heads.length;
+  var colsCss = LAYOUT === '1' ? '120px 1fr 1fr 1fr' : LAYOUT === '2' ? '120px 1.25fr 1fr' : '120px 1fr';
+  box.style.gridTemplateColumns = colsCss;
+
+  var grid = COURTS.map(function (c) {
+    var list = per[c].filter(function (it) { return it.end > t; }).sort(function (a, b) { return a.start - b.start; });
+    var cur = list[0] && list[0].start <= t ? list[0] : null;
+    var rest = cur ? list.slice(1) : list;
+    return [cur, rest[0] || null, rest[1] || null];
+  });
+
+  var html = '<div></div>' + heads.map(function (h) {
+    return '<div class="ch"' + (h[1] ? ' style="background:var(--now-bg);color:var(--now-text)"' : '') + '>' + h[0] + '</div>';
+  }).join('');
+  COURTS.forEach(function (c, r) {
+    html += '<div class="cn" style="grid-row:' + (r + 2) + ';grid-column:1">Court<b>' + c + '</b></div>';
+  });
+
+  var anything = grid.some(function (g) { return g[0] || g[1] || g[2]; });
+  if (!anything) {
+    html += '<div class="quiet"><div class="head">The courts are quiet</div><p>' +
+      (items.length ? 'That’s a wrap for today.<br>' : '') + 'schedule.iowaselectvbc.com</p></div>';
+    box.innerHTML = html; return;
+  }
+
+  for (var k = 0; k < cols; k++) {
+    var r = 0;
+    while (r < COURTS.length) {
+      // layout 3: one column showing whatever is on now (or next), with "Next:" underneath
+      var it = (LAYOUT === '3') ? (grid[r][0] || grid[r][1]) : grid[r][k];
+      var s = r + 1;
+      while (s < COURTS.length && it) {
+        var o = (LAYOUT === '3') ? (grid[s][0] || grid[s][1]) : grid[s][k];
+        if (!o || o.id !== it.id) break;
+        if (LAYOUT === '3') {                       // only merge when what follows matches too
+          var a = grid[r][0] ? grid[r][1] : grid[r][2], b = grid[s][0] ? grid[s][1] : grid[s][2];
+          if ((a && a.id) !== (b && b.id)) break;
+        }
+        s++;
+      }
+      var style = 'grid-column:' + (k + 2) + ';grid-row:' + (r + 2) + '/' + (s + 2);
+      if (!it) {
+        html += '<div class="cell open" style="' + style + '"><div class="lab">Open</div></div>';
+      } else if (LAYOUT === '3') {
+        var isNow = !!grid[r][0];
+        var nxt = isNow ? grid[r][1] : grid[r][2];
+        var extra = nxt ? '<div class="nx">Next: <b>' + esc(shortName(nxt)) + '</b> · ' + span(nxt.start, nxt.end) + '</div>'
+                        : (isNow ? '<div class="nx">Then open</div>' : '');
+        html += cellHtml(it, isNow, (isNow ? '' : '') + extra, style, 2);
+      } else {
+        html += cellHtml(it, k === 0, '', style, cols);
+      }
+      r = s;
+    }
+  }
+  box.innerHTML = html;
+}
+
+/* ═══════════════ announcements ═══════════════ */
+function renderAnnouncements() {
+  var list = (feed && feed.announcements) || [];
+  el('ann').innerHTML = list.length
+    ? list.map(function (a) { return '<li' + (a.pinned ? ' class="pin"' : '') + '>' + esc(a.text) + '</li>'; }).join('')
+    : '<li class="empty" style="border:0;padding-left:0">No announcements right now. Have a great practice!</li>';
+}
+
+/* ═══════════════ this weekend (pages through when it doesn't fit) ═══════════════ */
+function renderWeekend() {
+  var show = !feed || !feed.settings || feed.settings.showWeekend !== false;
+  el('wkCard').classList.toggle('hide', !show);
+  el('cards').classList.toggle('noweekend', !show);
+  if (!show) return;
+
+  var w = (feed && feed.weekend) || null;
+  el('wkLabel').textContent = w ? w.label : '';
+  var box = el('wk');
+  if (!w || !w.events.length) {
+    var nx = w && w.next;
+    box.innerHTML = '<div class="empty">No tournaments this weekend.' +
+      (nx ? '<br><br>Next up:<br><b style="color:#1F2021">' + esc(nx.event) + '</b><br>' + esc(nx.dates) : '') + '</div>';
+    el('wkPager').textContent = '';
+    wkPages = [];
+    return;
+  }
+  var evHtml = w.events.map(function (e) {
+    return '<div class="ev"><div class="en">' + esc(e.event) + '</div>' +
+           '<div class="el">' + esc([e.location, e.dates].filter(Boolean).join(' · ')) + '</div>' +
+           '<div class="et">' + esc(e.teams.join(', ')) + '</div></div>';
+  });
+  // split into pages by measuring
+  wkPages = [];
+  var page = [];
+  box.innerHTML = '';
+  var limit = box.clientHeight;
+  evHtml.forEach(function (h) {
+    box.innerHTML = page.concat([h]).join('');
+    if (box.scrollHeight > limit + 2 && page.length) { wkPages.push(page); page = [h]; }
+    else page.push(h);
+  });
+  if (page.length) wkPages.push(page);
+  if (wkPage >= wkPages.length) wkPage = 0;
+  showWkPage();
+}
+function showWkPage() {
+  if (!wkPages.length) return;
+  el('wk').innerHTML = wkPages[wkPage].join('');
+  el('wkPager').textContent = wkPages.length > 1 ? (wkPage + 1) + ' / ' + wkPages.length : '';
+}
+setInterval(function () {
+  if (wkPages.length > 1) { wkPage = (wkPage + 1) % wkPages.length; showWkPage(); }
+}, 10000);
+
+/* ═══════════════ rotating slides ═══════════════ */
+function buildSlides() {
+  var out = [];
+  var lb = (feed && feed.leaderboard) || {};
+  (lb.challenges || []).forEach(function (c) {
+    out.push('<div class="kick">This week’s ' + esc(c.type.toLowerCase()) + ' challenge</div>' +
+      '<div class="big">' + esc(c.title) + '</div>' +
+      (c.details ? '<div class="txt">' + esc(c.details) + '</div>' : '') +
+      (c.pts ? '<div><span class="pts">' + esc(c.pts) + ' points</span></div>' : ''));
+  });
+  function board(title, list, isPlayer) {
+    var rows = list.slice(0, 6).map(function (r) {
+      return '<div class="r"><span class="n">' + r.rank + '</span><span class="nm">' + esc(r.name) +
+        (isPlayer && r.team ? '<small>' + esc(r.team) + '</small>' : '') + '</span><span class="p">' + r.pts + '</span></div>';
+    }).join('');
+    return '<div class="kick">Leaderboard Challenge</div><div class="big">' + title + '</div><div class="board">' + rows + '</div>';
+  }
+  if ((lb.teams || []).length) out.push(board('Top teams', lb.teams, false));
+  if ((lb.players || []).length) out.push(board('Top players', lb.players, true));
+
+  ((feed && feed.slides) || []).forEach(function (s) {
+    if (s.image) {
+      out.push('<div class="img' + (s.type === 'Media' ? ' cover' : '') + '" style="background-image:url(&quot;' + esc(s.image) + '&quot;)"></div>' +
+        (s.title || s.text ? '<div class="cap">' + esc([s.title, s.text].filter(Boolean).join(' — ')) + '</div>' : ''));
+    } else if (s.title || s.text) {
+      out.push('<div class="kick">' + esc(s.type === 'Sponsor' ? 'Thank you to our sponsor' : 'Iowa Select') + '</div>' +
+        (s.title ? '<div class="big">' + esc(s.title) + '</div>' : '') +
+        (s.text ? '<div class="txt">' + esc(s.text) + '</div>' : ''));
+    }
+  });
+
+  if (!out.length) {
+    out.push('<div class="kick">Follow along</div><div class="big">@iowaselectvbc</div>' +
+             '<div class="txt">Team photos, highlights and weekly challenges on Instagram, Facebook and TikTok.</div>');
+  }
+  return out;
+}
+
+function renderSlides() {
+  var slides = buildSlides();
+  var key = slides.join('');
+  if (key === lastSlideKey) return;          // nothing changed: keep rotating where we are
+  lastSlideKey = key;
+  var box = el('slides');
+  box.innerHTML = slides.map(function (h, i) { return '<div class="sl' + (i === 0 ? ' on' : '') + '">' + h + '</div>'; }).join('') +
+    (slides.length > 1 ? '<div class="dots">' + slides.map(function (_, i) { return '<i' + (i === 0 ? ' class="on"' : '') + '></i>'; }).join('') + '</div>' : '');
+  slideIdx = 0;
+  clearInterval(slideTimer);
+  if (slides.length > 1) {
+    var secs = (feed && feed.settings && feed.settings.slideSeconds) || 12;
+    slideTimer = setInterval(nextSlide, secs * 1000);
+  }
+}
+function nextSlide() {
+  var all = el('slides').querySelectorAll('.sl'), dots = el('slides').querySelectorAll('.dots i');
+  if (all.length < 2) return;
+  all[slideIdx].classList.remove('on'); if (dots[slideIdx]) dots[slideIdx].classList.remove('on');
+  slideIdx = (slideIdx + 1) % all.length;
+  all[slideIdx].classList.add('on'); if (dots[slideIdx]) dots[slideIdx].classList.add('on');
+}
+
+/* ═══════════════ settings: Wi-Fi, socials, pause ═══════════════ */
+function renderSettings() {
+  var s = (feed && feed.settings) || {};
+  if (!Q.get('theme') && s.theme) applyTheme(s.theme);          // Colorway on the Settings tab (A–D)
+  if (!Q.get('layout') && s.layout && s.layout !== (LAYOUT || 'grid')) applyLayout(s.layout);   // Layout on the Settings tab
+  el('wifiName').textContent = s.wifiName || '—';
+  el('wifiPass').textContent = s.wifiPassword || '—';
+  el('wifi').classList.toggle('hide', !s.wifiName);
+  [['soFb', s.facebook], ['soIg', s.instagram], ['soTt', s.tiktok]].forEach(function (p) {
+    el(p[0]).classList.toggle('hide', !p[1]);
+    el(p[0]).querySelector('span').textContent = p[1] || '';
+  });
+  el('web').textContent = s.website || '';
+  var paused = !!s.paused;
+  el('paused').classList.toggle('hide', !paused);
+  el('courts').classList.toggle('hide', paused);
+  el('cards').classList.toggle('hide', paused);
+}
+
+function renderAll() {
+  renderSettings();
+  renderCourts();
+  renderAnnouncements();
+  renderWeekend();
+  renderSlides();
+  renderStale();
+}
+
+/** If the feed hasn't refreshed in 10+ minutes, say so quietly in the corner. */
+function renderStale() {
+  var msg = '';
+  if (feed && feed.generated) {
+    var age = Math.round((Date.now() - new Date(feed.generated).getTime()) / 60000);
+    if (age >= 10 && !Q.get('feed')) msg = 'Last updated ' + (age >= 120 ? Math.round(age / 60) + ' hours' : age + ' min') + ' ago';
+  }
+  el('stale').textContent = msg;
+}
+
+/* ═══════════════ data ═══════════════ */
+function load() {
+  if (!FEED_URL || FEED_URL.indexOf('PASTE_') === 0) {
+    el('courts').innerHTML = '<div class="quiet" style="grid-column:1/8;grid-row:1/5"><div class="head">Almost ready</div><p>Paste the feed URL into index.html (FEED_URL).</p></div>';
+    return;
+  }
+  fetch(FEED_URL + (FEED_URL.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (f) {
+      feed = f;
+      try { localStorage.setItem('isvbcTvFeed', JSON.stringify(f)); } catch (e) {}
+      renderAll();
+    })
+    .catch(function () {
+      // Keep showing what we have. On a cold start, use the last saved copy.
+      if (!feed) { try { feed = JSON.parse(localStorage.getItem('isvbcTvFeed')); } catch (e) {} }
+      if (feed) renderAll();
+    });
+}
+
+/* ═══════════════ start ═══════════════ */
+tickClock();
+setInterval(tickClock, 1000);
+setInterval(function () { if (feed) { renderCourts(); renderStale(); } }, 30000);   // Now/Next/Later move with the clock
+load();
+setInterval(load, CHECK_EVERY_MS);
+
+// Fresh start every night at 3:30am (picks up any page update, clears memory).
+setInterval(function () {
+  var t = nowParts().mins;
+  if (t === 210 && performance.now() > 120000) location.reload();
+}, 30000);
+</script>
+</body>
+</html>
