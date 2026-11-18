@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Iowa Select Lobby TV — build 2026-11-16c
+/* Iowa Select Lobby TV — build 2026-11-18a
    Designed on a fixed 1920x1080 stage, scaled to fit whatever screen it's on.
    Colours live in the theme blocks below; ?theme=dark|cream|red|night   ?layout=3|grid switches for previews. */
 :root{
@@ -184,7 +184,7 @@ body.lay-1{--left:930px} body.lay-2{--left:720px} body.lay-3{--left:640px}
 .vc .cell .sb{font-size:16px}
 .vc .cell.fit2 .lab{font-size:22px}.vc .cell.fit3 .lab{font-size:19px}.vc .cell.fit4 .lab{font-size:16px}
 .vc .cell.open .lab{font-size:19px}
-.vc .cell .nx{font-size:17px;font-weight:700;margin-top:6px;padding-top:6px;border-top:1.5px solid rgba(0,0,0,.12);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mute)}
+.vc .cell .nx{font-size:16px;font-weight:700;margin-top:4px;padding-top:4px;border-top:1.5px solid rgba(0,0,0,.12);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mute)}
 .vc .cell.now .nx{border-top-color:rgba(255,255,255,.35);color:var(--now-sub)}
 .vc .cell .nx b{font-weight:800;color:inherit}
 .vc .quiet{grid-column:2/-1;grid-row:2/8}
@@ -212,7 +212,10 @@ body.lay-3 .vc .cell .nx b{color:var(--text)}
 .vc .tl{display:flex;align-items:center;gap:12px}
 .vc .tl .kd{margin-bottom:0}
 .vc .tl .tm{margin-top:0;font-size:18px}
-body.lay-3 .vc .cell .lab{margin-top:4px}
+body.lay-3 .vc .cell .lab{margin-top:2px;font-size:23px;line-height:1.1}
+body.lay-3 .vc .cell{padding:6px 14px}
+.vc .cell .nx{line-height:1.25}
+.vc .cell .nx + .nx{border-top:0;margin-top:1px;padding-top:0}
 .hide{display:none!important}
 </style>
 </head>
@@ -456,7 +459,7 @@ function renderCourtsVertical() {
     var list = per[c].filter(function (it) { return it.end > t; }).sort(function (a, b) { return a.start - b.start; });
     var cur = list[0] && list[0].start <= t ? list[0] : null;
     var rest = cur ? list.slice(1) : list;
-    return [cur, rest[0] || null, rest[1] || null];
+    return [cur, rest[0] || null, rest[1] || null, rest[2] || null];
   });
 
   var html = '<div></div>' + heads.map(function (h) {
@@ -484,7 +487,8 @@ function renderCourtsVertical() {
         if (!o || o.id !== it.id) break;
         if (LAYOUT === '3') {                       // only merge when what follows matches too
           var a = grid[r][0] ? grid[r][1] : grid[r][2], b = grid[s][0] ? grid[s][1] : grid[s][2];
-          if ((a && a.id) !== (b && b.id)) break;
+          var a2 = grid[r][0] ? grid[r][2] : grid[r][3], b2 = grid[s][0] ? grid[s][2] : grid[s][3];
+          if ((a && a.id) !== (b && b.id) || (a2 && a2.id) !== (b2 && b2.id)) break;
         }
         s++;
       }
@@ -494,7 +498,9 @@ function renderCourtsVertical() {
       } else if (LAYOUT === '3') {
         var isNow = !!grid[r][0];
         var nxt = isNow ? grid[r][1] : grid[r][2];
-        var extra = nxt ? '<div class="nx">Next: <b>' + esc(shortName(nxt)) + '</b> · ' + span(nxt.start, nxt.end) + '</div>'
+        var thn = isNow ? grid[r][2] : grid[r][3];          // the one after next (2026-11-18)
+        var line = function (lbl, x) { return '<div class="nx">' + lbl + ': <b>' + esc(shortName(x)) + '</b> · ' + span(x.start, x.end) + '</div>'; };
+        var extra = nxt ? line('Next', nxt) + (thn ? line('Then', thn) : '')
                         : (isNow ? '<div class="nx">Then open</div>' : '');
         html += cellHtml(it, isNow, (isNow ? '' : '') + extra, style, 2);
       } else {
