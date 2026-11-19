@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Iowa Select Lobby TV — build 2026-11-18a
+/* Iowa Select Lobby TV — build 2026-11-18b
    Designed on a fixed 1920x1080 stage, scaled to fit whatever screen it's on.
    Colours live in the theme blocks below; ?theme=dark|cream|red|night   ?layout=3|grid switches for previews. */
 :root{
@@ -299,9 +299,17 @@ var feed = null, slideIdx = 0, slideTimer = null, wkPage = 0, wkPages = [], last
 
 /* ═══════════════ fit the 1920x1080 stage to the screen ═══════════════ */
 function fit() {
-  var s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  // Some TV apps report the screen size differently from a browser, so use the smallest
+  // size any of them reports. ?zoom=0.5 (any number) forces the size by hand.
+  var vv = window.visualViewport;
+  var w = Math.min(innerWidth, document.documentElement.clientWidth || innerWidth, (vv && vv.width) || innerWidth);
+  var h = Math.min(innerHeight, document.documentElement.clientHeight || innerHeight, (vv && vv.height) || innerHeight);
+  var s = Math.min(w / 1920, h / 1080);
+  var z = parseFloat(new URLSearchParams(location.search).get('zoom'));
+  if (z > 0 && z < 5) s = z;
   document.getElementById('stage').style.transform = 'translate(-50%,-50%) scale(' + s + ')';
 }
+if (window.visualViewport) visualViewport.addEventListener('resize', fit);
 addEventListener('resize', fit); fit();
 
 /* ═══════════════ time (always Central) ═══════════════ */
